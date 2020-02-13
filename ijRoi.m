@@ -70,7 +70,6 @@ classdef ijRoi
                 filename = fullfile(filename.folder,filename.name);
             end
             if strcmp(filename(end-3:end),'.zip')
-                warning('no support for .zip\n Please unpack first to idividual .rois');
                 files = unzip(filename,'temp');
                 for ct = 1:length(files)
                     obj(ct) = ijRoi(fullfile(cd,files{ct}));
