@@ -69,6 +69,16 @@ classdef ijRoi
             if isstruct(filename) %file as structure
                 filename = fullfile(filename.folder,filename.name);
             end
+            if strcmp(filename(end-3:end),'.zip')
+                warning('no support for .zip\n Please unpack first to idividual .rois');
+                files = unzip(filename,'temp');
+                for ct = 1:length(files)
+                    obj(ct) = ijRoi(fullfile(cd,files{ct}));
+                    delete(fullfile(cd,files{ct}));
+                end
+                rmdir('temp')
+                return;
+            end
             if ~strcmp(filename(end-3:end),obj.EXTENSION),filename=[filename,obj.EXTENSION];end
             if ~exist(filename,'file')
                 error('cannot find file')
@@ -123,8 +133,12 @@ classdef ijRoi
             end
         end
         function [] = plot(obj)
-            plot(obj.x,obj.y,'.-')
-            set(gca,'ydir','reverse')
+            hold on
+            for ct=1:length(obj)
+                plot(obj(ct).x,obj(ct).y,'.-')
+                set(gca,'ydir','reverse')
+            end
+            hold off
         end
     end
     methods(Static, Hidden)
